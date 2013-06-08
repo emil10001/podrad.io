@@ -1,9 +1,9 @@
 <div class="hero-unit">
     <h1>'PodRad.io!</h1>
-    <p>You are subscribed to have</p>
+    <p>You are subscribed to:</p>
     <ul>
-        <li ng-repeat="pod in myPods">{{pod.name}} : {{pod.url}}</li>
+        <li ng-repeat="pod in myPods">
+            <a ng-href="{{pod.url}}">{{pod.name}}</a>
+        </li>
     </ul>
-    <p>installed.</p>
-    <h3>Enjoy coding! - Yeoman</h3>
 </div>
