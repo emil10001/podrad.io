@@ -7,6 +7,10 @@ angular.module('intellijWorkspaceApp', [])
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+        .when('/pods', {
+            templateUrl: 'views/pods.html',
+            controller: 'PodsCtrl'
+        })
       .otherwise({
         redirectTo: '/'
       });

@@ -1,3 +1,5 @@
 logs/*
+.tmp/*
 .idea/*
+.sass-cache/*
 !0.gitkeep
