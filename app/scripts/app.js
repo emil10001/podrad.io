@@ -11,7 +11,7 @@ angular.module('intellijWorkspaceApp', ['ngSanitize','ui.bootstrap'])
                 templateUrl: 'views/pods.html',
                 controller: 'PodsCtrl'
             })
-            .when('/onepod', {
+            .when('/onepod/:podId', {
                 templateUrl: 'views/onepod.html',
                 controller: 'OnePodCtrl'
             })
