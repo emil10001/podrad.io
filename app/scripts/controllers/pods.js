@@ -8,4 +8,9 @@ angular.module('intellijWorkspaceApp')
             {'name' : 'Dunk Tank w/ Brian and Chet',
             'url' : 'http://www.dunktankpodcast.com/1/feed'}
         ];
+        $scope.addPod = function(){
+            $scope.myPods.push({'name': $scope.name, 'url': $scope.url});
+            $scope.name = '';
+            $scope.url = '';
+        };
     });
