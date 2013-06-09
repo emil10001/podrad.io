@@ -1,26 +1,26 @@
 <div class="hero-unit">
-	<h1>PodRad.io!</h1>
-	<table>
-		<tr>
-			<td>
-				<p><img ng-src="{{ podcontents.rss.channel.image.1.url }}"></img></p>
-			</td>
-			<td>
-				<h2><a ng-href="{{ podcontents.rss.channel.link }}">{{ podcontents.rss.channel.title }}</a></h2>
-			</td>
-		</tr>
-	</table>
-	<h3>{{ podcontents.rss.channel.description.__cdata }}</h3>
-	<accordion ng-repeat="item in podcontents.rss.channel.item | limitTo:10 " close-others="oneAtATime">
-	<accordion-group heading="{{ item.title }}">
-			<div ng-bind-html=' item.summary.__cdata '> </div>
-			<p>
-			<audio controls preload="metadata">
-			<source ng-src="{{ item.enclosure._url }}" type="{{ item.enclosure._type}}">
-			Your browser does not support this content	
-			</audio>
-			</p>
-	</accordion-group>
-	</accordion>
+    <h1>PodRad.io!</h1>
+    <table>
+        <tr>
+            <td>
+                <p><img ng-src="{{ podcontents.image._href }}" width='200px'></img></p>
+            </td>
+            <td>
+                <h2><a ng-href="{{ podcontents.link[0] }}">{{ podcontents.title }}</a></h2>
+            </td>
+        </tr>
+    </table>
+    <h3>{{ podcontents.description }}</h3>
+    <accordion ng-repeat="item in podcontents.item | limitTo:10 " close-others="oneAtATime">
+    <accordion-group heading="{{ item.title }}">
+    <div ng-bind-html=' item.description '> </div>
+    <p>
+    <audio controls preload="metadata">
+    <source ng-src="{{ item.enclosure._url }}" type="{{ item.enclosure._type }}">
+    Your browser does not support this content	
+    </audio>
+    </p>
+    </accordion-group>
+    </accordion>
 
 </div>
