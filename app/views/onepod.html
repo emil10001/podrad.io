@@ -13,17 +13,16 @@
 	<h3>{{ podcontents.rss.channel.description.__cdata }}</h3>
 	<ul ng-repeat="item in podcontents.rss.channel.item | limitTo:3">
 		<li>
-		<p>
-		{{ item.title }}
-		</p>
-		<div ng-bind-html=' item.summary.__cdata '> </div>
-		<p>
-		<audio controls >
-		<source ng-src="{{ item.enclosure._url }}" type="{{ item.enclosure._type}}">
-		Your browser does not support this content	
-		</audio>
-		</p>
-	</table>
-	</li>
-</ul>
+		<p><a ng-click="isCollapsed = !isCollapsed"> {{ item.title }} </a> </p>
+		<div collapse="isCollapsed">
+			<div ng-bind-html=' item.summary.__cdata '> </div>
+			<p>
+			<audio controls preload="metadata">
+			<source ng-src="{{ item.enclosure._url }}" type="{{ item.enclosure._type}}">
+			Your browser does not support this content	
+			</audio>
+			</p>
+		</div>
+		</li>
+	</ul>
 </div>

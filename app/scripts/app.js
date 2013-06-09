@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('intellijWorkspaceApp', ['ngSanitize'])
+angular.module('intellijWorkspaceApp', ['ngSanitize','ui.bootstrap'])
     .config(function ($routeProvider) {
         $routeProvider
             .when('/', {

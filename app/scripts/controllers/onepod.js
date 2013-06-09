@@ -5,6 +5,8 @@ var X2JS = new X2JS();
 
 angular.module('intellijWorkspaceApp')
 .controller('OnePodCtrl', function ($scope, $http) {
+	$scope.isCollapsed = true;
+
 	$scope.podUrl = 'http://www.npr.org/rss/podcast.php?id=510289' ; 
 
 	var generateJson = function(xmlContents){
