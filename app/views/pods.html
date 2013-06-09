@@ -1,14 +1,16 @@
 <div class="hero-unit">
     <h1>'PodRad.io!</h1>
 
-    <input type="text" ng-model="search" class="search-query" placeholder="Search">
-
+    <p>
     <form ng-submit="addPod()">
         <input type="text" ng-model="name" size="30" placeholder="podcast name">
+        <br>
         <input type="text" ng-model="url" size="60" placeholder="url">
         <input class="btn-primary" type="submit" value="add">
     </form>
+    </p>
     <p>You are subscribed to:</p>
+    <p> <input type="text" ng-model="search" class="search-query" placeholder="Search"> </p>
     <ul>
         <li ng-repeat="pod in myPods | filter:search | orderBy:'name'">
         <a ng-href="{{pod.url}}">{{pod.name}}</a>
