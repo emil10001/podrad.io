@@ -11,9 +11,8 @@
     </p>
     <p>You are subscribed to:</p>
     <p> <input type="text" ng-model="search" class="search-query" placeholder="Search"> </p>
-    <ul>
-        <li ng-repeat="pod in myPods | filter:search | orderBy:'name'">
+    <div ng-repeat="pod in myPods | filter:search | orderBy:'name'">
+        <a class="btn btn-mini btn-danger" ng-click="deletePod(pod)"><i class="icon-remove icon-white"></i></a> 
         <a ng-href="{{pod.url}}">{{pod.name}}</a>
-        </li>
-    </ul>
+    </div>
 </div>

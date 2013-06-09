@@ -11,8 +11,8 @@
         </tr>
     </table>
     <h3>{{ podcontents.description }}</h3>
-    <accordion ng-repeat="item in podcontents.item | limitTo:10 " close-others="oneAtATime">
-    <accordion-group heading="{{ item.title }}">
+    <accordion>
+    <accordion-group ng-repeat="item in podcontents.item | limitTo:10 " close-others="oneAtATime" heading="{{ item.title }}">
     <div ng-bind-html=' item.description '> </div>
     <p>
     <audio controls preload="metadata">
