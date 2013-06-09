@@ -2,4 +2,5 @@ logs/*
 .tmp/*
 .idea/*
 .sass-cache/*
+*.swp
 !0.gitkeep
