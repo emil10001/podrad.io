@@ -1,0 +1,26 @@
+<div class="hero-unit">
+    <h1>PodRad.io!</h1>
+    <table>
+        <tr>
+            <td>
+                <p><img ng-src="{{ podcontents.image._href }}" width="200px"></p>
+            </td>
+            <td>
+                <h2><a ng-href="{{ podcontents.link[0] }}">{{ podcontents.title }}</a></h2>
+            </td>
+        </tr>
+    </table>
+    <h3>{{ podcontents.description }}</h3>
+    <accordion>
+    <accordion-group ng-repeat="item in podcontents.item | limitTo:10 " close-others="oneAtATime" heading="{{ item.title }}">
+    <div ng-bind-html=" item.description "> </div>
+    <p>
+    <audio controls="" preload="metadata">
+    <source ng-src="{{ item.enclosure._url }}" type="{{ item.enclosure._type }}">
+    Your browser does not support this content	
+    </source></audio>
+    </p>
+    </accordion-group>
+    </accordion>
+
+</div>
