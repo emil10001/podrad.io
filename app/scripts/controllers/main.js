@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('intellijWorkspaceApp')
+angular.module('podRadio')
   .controller('MainCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',

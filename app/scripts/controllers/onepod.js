@@ -2,7 +2,7 @@
 
 var X2JS = new X2JS();
 
-var myApp = angular.module('intellijWorkspaceApp');
+var myApp = angular.module('podRadio');
 
 myApp.config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
@@ -14,21 +14,21 @@ myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http) {
     $scope.podId = $routeParams.podId;
     $scope.oneAtATime = true;
 
-    $scope.myPods = [
-        {'name' : 'Planet Money', 'url' : 'http://www.npr.org/rss/podcast.php?id=510289' },   
-            {'name' : 'Dunk Tank w/ Brian and Chet', 'url' : 'http://dunktankpodcast.podomatic.com/rss2.xml'}  
-                ];
+    var myPod = JSON.parse(localStorage[$scope.podId]);
 
-                //$scope.podUrl = 'http://www.npr.org/rss/podcast.php?id=510289' ; 
-                //$scope.podUrl = 'http://feeds.feedburner.com/freakonomicsradio' ; 
-                $scope.podUrl = $scope.myPods[$scope.podId].url;
+    delete $http.defaults.headers.common['X-Requested-With'];
+    $http.defaults.useXDomain = true ;
 
-                delete $http.defaults.headers.common['X-Requested-With'];
-                $http.defaults.useXDomain = true ;
+    var requestUrl = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&output=xml&callback=JSON_CALLBACK&num=3&q=' +  encodeURIComponent(myPod.url) ; 
 
-                $scope.makeRequest = $http.jsonp('http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&output=xml&callback=JSON_CALLBACK&num=3&q=' + encodeURIComponent($scope.podUrl) ).
-                    success(function(data, status) {
-                        $scope.podcontents = X2JS.xml_str2json( data.responseData.xmlString ).rss.channel;
-                        console.log($scope.podcontents);
-                    });
+    console.log(myPod);
+    console.log('url ' + myPod.url);
+    console.log('request ' + requestUrl);
+
+    $scope.makeRequest = $http.jsonp(requestUrl).
+    success(function(data, status) {
+        console.log(data);
+        $scope.podcontents = X2JS.xml_str2json( data.responseData.xmlString ).rss.channel;
+        console.log($scope.podcontents);
+    });
 });
