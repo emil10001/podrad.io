@@ -9,7 +9,7 @@ myModule.factory('PodIdsLoader', function() {
         if (!!!localStorage.podIds)
             localStorage.setItem( 'podIds', JSON.stringify([]));
         return JSON.parse( localStorage.podIds );
-    }
+    };
 });
 
 myModule.factory('PodsLoader', function() {
