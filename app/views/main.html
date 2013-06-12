@@ -1,12 +1,12 @@
 <div>
     <h1>podRad.io!</h1>
     <div id="left-panel">
-        <div ng-include="'views/partials/pods.html'" ng-controller="PodsCtrl">
+        <div ng-include="'views/pods.html'" ng-controller="PodsCtrl">
         </div>
     </div>
     <div id="right-panel">
         <div ng-switch="podId != null" ng-controller="OnePodCtrl">
-            <div ng-switch-when="true" ng-include="'views/partials/onepod.html'">
+            <div ng-switch-when="true" ng-include="'views/onepod.html'">
             </div>
         </div>
     </div>
