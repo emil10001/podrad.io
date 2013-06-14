@@ -1,7 +1,8 @@
 <p>
+Add a new podcast:<br>
 <form ng-submit="addPod()">
-    <input type="text" ng-model="name" size="30" placeholder="podcast name">
-    <input type="text" ng-model="url" size="30" placeholder="url">
+    <input type="text" ng-model="newpod.name" size="30" placeholder="podcast name"><br>
+    <input type="text" ng-model="newpod.url" size="30" placeholder="url">
     <button class="btn-primary" type="submit"><i class="icon-plus icon-white"></i></button>
 </form>
 </p>

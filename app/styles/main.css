@@ -1,10 +1,1 @@
 /* Will be compiled down to a single stylesheet with your sass files */
-
-#right-panel{
-    margin-left:  35%;
-    width: 50%;
-}
-#left-panel{
-    float: left;
-    width: 30%;
-}

@@ -14,21 +14,31 @@ myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http) {
     $scope.podId = $routeParams.podId;
     $scope.oneAtATime = true;
 
-    var myPod = JSON.parse(localStorage[$scope.podId]);
+    $scope.myPod = JSON.parse(localStorage[$scope.podId]);
+    $scope.myPod.numResults = 5;
 
     delete $http.defaults.headers.common['X-Requested-With'];
     $http.defaults.useXDomain = true ;
 
-    var requestUrl = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&output=xml&callback=JSON_CALLBACK&num=3&q=' +  encodeURIComponent(myPod.url) ; 
+    console.log($scope.myPod);
+    console.log('url ' + $scope.myPod.url);
 
-    console.log(myPod);
-    console.log('url ' + myPod.url);
-    console.log('request ' + requestUrl);
-
-    $scope.makeRequest = $http.jsonp(requestUrl).
-    success(function(data, status) {
-        console.log(data);
-        $scope.podcontents = X2JS.xml_str2json( data.responseData.xmlString ).rss.channel;
-        console.log($scope.podcontents);
-    });
+    $scope.makeRequest = function(){
+        console.log('numResults ' + $scope.myPod.numResults);
+        var requestUrl = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&output=xml&callback=JSON_CALLBACK&num=' + $scope.myPod.numResults + '&q=' +  encodeURIComponent($scope.myPod.url); 
+        
+        $http.jsonp(requestUrl).
+        success(function(data, status) {
+            console.log('requested ' + requestUrl);
+            console.log(data);
+            $scope.podcontents = X2JS.xml_str2json( data.responseData.xmlString ).rss.channel;
+            if( Object.prototype.toString.call( $scope.podcontents.link ) === '[object Array]' ) {
+                $scope.podcontents.podcastUrl = $scope.podcontents.link[0]; 
+            } else { 
+                $scope.podcontents.podcastUrl = $scope.podcontents.link; 
+            }
+            console.log($scope.podcontents);
+        });
+    };
+    $scope.makeRequest();
 });

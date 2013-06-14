@@ -1,12 +1,16 @@
 <div>
     <h1>podRad.io!</h1>
-    <div id="left-panel">
-        <div ng-include="'views/pods.html'" ng-controller="PodsCtrl">
+    <div class="row">
+        <div class="span3">
+            <div class="well sidebar-nav">
+                <div ng-include="'views/pods.html'" ng-controller="PodsCtrl">
+                </div>
+            </div>
         </div>
-    </div>
-    <div id="right-panel">
-        <div ng-switch="podId != null" ng-controller="OnePodCtrl">
-            <div ng-switch-when="true" ng-include="'views/onepod.html'">
+        <div class="span8">
+            <div ng-switch="podId != null" ng-controller="OnePodCtrl">
+                <div ng-switch-when="true" ng-include="'views/onepod.html'">
+                </div>
             </div>
         </div>
     </div>

@@ -4,11 +4,17 @@
             <p><img ng-src="{{ podcontents.image._href }}" width='200px'></img></p>
         </td>
         <td>
-            <h2><a ng-href="{{ podcontents.link[0] }}">{{ podcontents.title }}</a></h2>
+            <h2><a ng-href="{{ podcontents.podcastUrl }}">{{ podcontents.title }}</a></h2>
         </td>
     </tr>
 </table>
 <h3>{{ podcontents.description }}</h3>
+<p>How many items do you want to see? 
+<form ng-submit="makeRequest()">
+    <input type="text" size="5" ng-model="myPod.numResults">
+    <button class="btn-primary" type="submit"><i class="icon-refresh icon-white"></i></button>
+</form>
+</p>
 <accordion>
 <accordion-group ng-repeat="item in podcontents.item | limitTo:10 " close-others="oneAtATime" heading="{{ item.title }}">
 <div ng-bind-html=' item.description '> </div>
