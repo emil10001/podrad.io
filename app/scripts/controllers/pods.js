@@ -7,7 +7,7 @@ angular.module('podRadio')
         CryptoJS.MD5('http://www.npr.org/rss/podcast.php?id=510289').toString(CryptoJS.enc.Hex), 
         CryptoJS.MD5('http://dunktankpodcast.podomatic.com/rss2.xml').toString(CryptoJS.enc.Hex), 
         CryptoJS.MD5('http://feeds.feedburner.com/freakonomicsradio').toString(CryptoJS.enc.Hex), 
-        CryptoJS.MD5('ohttp://www.theskepticsguide.org/feed/rss.aspx?feed=SGU').toString(CryptoJS.enc.Hex), 
+        CryptoJS.MD5('ohttp://www.theskepticsguide.org/feed/rss.aspx?feed=SGU').toString(CryptoJS.enc.Hex) 
     ];
     var defaultPods = [ 
         {'id' : defaultPodIds[0], 
@@ -21,7 +21,7 @@ angular.module('podRadio')
             'url' : 'http://feeds.feedburner.com/freakonomicsradio'},
         {'id': defaultPodIds[3], 
             'name' : 'Skeptics Guide to the Universe', 
-            'url' : 'http://www.theskepticsguide.org/feed/rss.aspx?feed=SGU'},
+            'url' : 'http://www.theskepticsguide.org/feed/rss.aspx?feed=SGU'}
     ];
 
     function useDefaults() {
