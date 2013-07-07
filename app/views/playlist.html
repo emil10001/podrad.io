@@ -1,0 +1,24 @@
+<table>
+    <tr>
+        <td>
+            <p><img ng-src="{{ playlist.curPlaying.image }}" width='200px'></img></p>
+        </td>
+        <td>
+            <h2><a ng-href="{{ playlist.curPlaying.podcastUrl }}">{{ playlist.curPlaying.name }}<br>{{ playlist.curPlaying.title }}</a></h2>
+        </td>
+    </tr>
+</table>
+<br>
+
+{{ playlist.curPlaying.description }} <br>
+
+<audio controls preload="metadata" width="100%">
+<source ng-src="{{ playlist.curPlaying.audio }}" type="{{ playlist.curPlaying.type }}">
+Your browser does not support this content	
+</audio>
+
+<div ng-repeat="item in playlist.playlist">
+    <a class="btn btn-mini" ng-click="playItem(item)"><i class="icon-play icon-white"></i></a> 
+    {{ item.name }} - {{ item.title }}
+</div>
+
