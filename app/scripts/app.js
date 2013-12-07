@@ -11,6 +11,10 @@ var myApp = angular.module('podRadio', [
 
 myApp.config(function ($routeProvider) {
     $routeProvider
+        .when('/', {
+            templateUrl: 'views/main.html',
+            controller: 'MainCtrl'
+        })
         .when('/:podId', {
             templateUrl: 'views/main.html',
             controller: 'MainCtrl'
