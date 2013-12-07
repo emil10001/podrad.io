@@ -1,7 +1,5 @@
 'use strict';
 
-var myApp = angular.module('podRadio');
-
 myApp.controller('PlaylistCtrl', function ($scope) {
 
     $scope.playItem = function(item){

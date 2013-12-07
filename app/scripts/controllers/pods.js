@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('podRadio')
-.controller('PodsCtrl', function ($scope) {
+myApp.controller('PodsCtrl', function ($scope) {
 
     var defaultPodIds = [ 
         CryptoJS.MD5('http://www.npr.org/rss/podcast.php?id=510289').toString(CryptoJS.enc.Hex), 

@@ -2,8 +2,6 @@
 
 var X2JS = new X2JS();
 
-var myApp = angular.module('podRadio');
-
 myApp.config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -26,7 +24,7 @@ myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http) {
     $scope.makeRequest = function(){
         console.log('numResults ' + $scope.myPod.numResults);
         var requestUrl = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&output=xml&callback=JSON_CALLBACK&num=' + $scope.myPod.numResults + '&q=' +  encodeURIComponent($scope.myPod.url); 
-        
+
         $http.jsonp(requestUrl).
         success(function(data, status) {
             console.log('requested ' + requestUrl);

@@ -1,10 +1,4 @@
 'use strict';
 
-angular.module('podRadio')
-  .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+myApp.controller('MainCtrl', function ($scope) {
+});

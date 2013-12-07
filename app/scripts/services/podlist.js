@@ -1,9 +1,9 @@
 'use strict';
 
 
-var myModule = angular.module('podRadio.services', []);
+var myService = angular.module('podRadio.services', []);
 
-myModule.factory('PodIdsLoader', function() {
+myService.factory('PodIdsLoader', function() {
     return function () { 
         console.log('updatePods ' + localStorage.podIds);
         if (!!!localStorage.podIds)
@@ -12,7 +12,7 @@ myModule.factory('PodIdsLoader', function() {
     };
 });
 
-myModule.factory('PodsLoader', function() {
+myService.factory('PodsLoader', function() {
     return function () { 
         var podIds = JSON.parse( localStorage.podIds );
         var myPods = [];
@@ -25,7 +25,7 @@ myModule.factory('PodsLoader', function() {
     };
 });
 
-myModule.factory('PodLoader', ['$route', function($route) {
+myService.factory('PodLoader', ['$route', function($route) {
     return function () { 
         return localStorage[$route.current.params.podId]; 
     };

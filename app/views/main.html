@@ -1,19 +1,19 @@
 <div>
     <h1>podRad.io!</h1>
-        <div class="well sidebar-nav">
-            <div ng-include="'views/playlist.html'" ng-controller="PlaylistCtrl">
+        <div class="sidebar-nav">
+            <div ng-include src="'views/playlist.html'" ng-controller="PlaylistCtrl">
             </div>
         </div>
     <div class="row">
         <div class="span3">
             <div class="well sidebar-nav">
-                <div ng-include="'views/pods.html'" ng-controller="PodsCtrl">
+                <div ng-include src="'views/pods.html'" ng-controller="PodsCtrl">
                 </div>
             </div>
         </div>
         <div class="span8">
             <div ng-switch="podId != null" ng-controller="OnePodCtrl">
-                <div ng-switch-when="true" ng-include="'views/onepod.html'">
+                <div ng-switch-when="true" ng-include src="'views/onepod.html'">
                 </div>
             </div>
         </div>

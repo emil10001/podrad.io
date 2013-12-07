@@ -4,4 +4,7 @@ logs/*
 .sass-cache/*
 dist/*
 *.swp
+*.iml
 !0.gitkeep
+node_modules/
+app/bower_components/
