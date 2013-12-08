@@ -6,7 +6,8 @@ var myUtils = angular.module('podRadio.utils', [
 
 var myService = angular.module('podRadio.services', [
     'ngResource',
-    'podRadio.utils'
+    'podRadio.utils',
+    'angular-indexeddb'
 ]);
 
 var myApp = angular.module('podRadio', [

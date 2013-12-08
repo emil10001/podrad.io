@@ -70,6 +70,7 @@ myApp.controller('PlaylistCtrl', function ($scope, $rootScope, Constants, PlayLi
 
     $scope.$on(Constants.INIT_PLAY, function (event, data) {
         console.log(Constants.INITTED);
+        $scope.playlist.playlist = PlayListService.playlist.playlist;
         updatePlayer();
         $scope.myPlayer.play();
         refreshIntervalId = setInterval(refreshInterval, 3000);
@@ -77,6 +78,7 @@ myApp.controller('PlaylistCtrl', function ($scope, $rootScope, Constants, PlayLi
 
     $scope.$on(Constants.INITTED, function (event, data) {
         console.log(Constants.INITTED);
+        $scope.playlist.playlist = PlayListService.playlist.playlist;
         updatePlayer();
         refreshIntervalId = setInterval(refreshInterval, 3000);
     });

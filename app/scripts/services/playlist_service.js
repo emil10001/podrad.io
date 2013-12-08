@@ -3,33 +3,27 @@
  */
 'use strict';
 
-myService.service('PlayListService', function ($rootScope, Constants) {
+myService.service('PlayListService', function ($rootScope, Constants, IDB) {
     this.playlist = {};
-
     this.playlist.curPlaying = {};
-
-    this.playlist.playlist = [
-        {
-            'image': 'http://assets.podomatic.net/mymedia/thumb/pro/2910419/1400x1400_7967045.jpg',
-            'url': 'http://dunktankpodcast.podomatic.com/',
-            'name': 'Dunk Tank Podcast',
-            'title': 'Avi Liberman',
-            'description': 'After a 3 week hiatus from The Dunk Tank, Chet goes to see 4 doctors and then gets sick, Dunkleman takes 2 steps forward then 1 step back, and guest Avi Liberman talks poker, touring in Israel, and breaks down the process of putting together a late night talk show set. For more on the podcast, follow us on twitter @DunkTankPodcast and visit our website www.DunkTankPodcast.com.',
-            'audio': 'http://dunktankpodcast.podomatic.com/enclosure/2013-07-01T00_00_00-07_00.m4a',
-            'type': 'audio/mp4'
-        },
-        {
-            'image': 'http://media.npr.org/images/podcasts/2013/primary/planet_money.png',
-            'url': 'http://www.npr.org/planetmoney',
-            'name': 'Planet Money',
-            'title': '#286: Libertarian Summer Camp',
-            'description': 'On today"s Planet Money, we travel to a place where people are trying to live without government interference. A place where you can use bits of silver to buy uninspected bacon. A place where a 9-year-old will sell you alcohol.',
-            'audio': 'http://podcastdownload.npr.org/anon.npr-podcasts/podcast/510289/199086839/npr_199086839.mp3',
-            'type': 'audio/mpeg'
-        }
-    ];
-
+    this.playlist.playlist = [];
     var self = this;
+
+    var dbParams = {
+        name: 'podradio',
+        version: 1,
+        options: [
+            {
+                storeName: 'playlist',
+                keyPath: 'created_at',
+                indexes: [
+                    { name: 'audio', unique: true },
+                    { name: 'url', unique: false }
+                ]
+            }
+        ]
+    };
+    IDB.openDB(dbParams.name, dbParams.version, dbParams.options);
 
     this.getCurAudio = function () {
         if (!!this.playlist.curPlaying.progress)
@@ -43,6 +37,7 @@ myService.service('PlayListService', function ($rootScope, Constants) {
     };
 
     this.removeItem = function (item) {
+        IDB.remove("playlist", item.created_at);
         this.playlist.playlist = this.playlist.playlist.filter(function (val) {
             return val["audio"] !== item.audio;
         });
@@ -53,7 +48,18 @@ myService.service('PlayListService', function ($rootScope, Constants) {
     };
 
     this.addItem = function (item) {
-        this.playlist.playlist.push(item);
+        var myItem = {};
+        myItem.created_at = new Date().getTime();
+        myItem.image = item.image;
+        myItem.url = item.url;
+        myItem.name = item.name;
+        myItem.title = item.title;
+        myItem.description = item.description;
+        myItem.audio = item.audio;
+        myItem.type = item.type;
+
+        this.playlist.playlist.push(myItem);
+        IDB.put("playlist", myItem);
     };
 
     this.updateCurPlaying = function (item) {
@@ -80,6 +86,12 @@ myService.service('PlayListService', function ($rootScope, Constants) {
     };
 
     var init = function () {
+        console.log('init before anything');
+        if (self.playlist.playlist.length <= 0) {
+            console.log('init self.playlist.playlist.length <= 0');
+            return;
+        }
+
         var audio = localStorage["curPlayingAudio"];
         var progress = localStorage[audio];
 
@@ -88,10 +100,11 @@ myService.service('PlayListService', function ($rootScope, Constants) {
         })[0];
         if (!self.playlist.curPlaying) {
             self.playlist.curPlaying = {};
-            return;
+            console.log('self.playlist.curPlaying');
+        } else {
+            self.playlist.curPlaying.progress = progress;
+            console.log('init', self.playlist.curPlaying);
         }
-        self.playlist.curPlaying.progress = progress;
-        console.log('init', self.playlist.curPlaying);
 
         $rootScope.$broadcast(Constants.INITTED);
     };
@@ -122,6 +135,63 @@ myService.service('PlayListService', function ($rootScope, Constants) {
 
         $rootScope.$broadcast(Constants.INIT_PLAY);
     }
+
+    this.update = function (data) {
+        $rootScope.$apply(function () {
+            console.log('update, apply');
+            self.playlist.playlist = data;
+            init();
+        });
+    }
+
+    var dbupdate = function (event, args) {
+        console.log("Playlist DBUPDATE");
+        console.log('args', args);
+        var dbname = args[0],
+            storeName = args[1],
+            data = args[2];
+        console.log('update', dbname, storeName, data);
+        if (dbname === dbParams.name && 'playlist' === storeName)
+            self.update(data);
+    };
+
+    var getAll = function (event, data) {
+        console.log("Playlist DBGETALL");
+        var dbname = data[0],
+            storeName = data[1],
+            transaction = data[2];
+        console.log('getAll', dbname, storeName, transaction);
+        if (dbname === dbParams.name && 'playlist' === storeName)
+            getAllPlaylists(transaction);
+    };
+
+    var getAllPlaylists = function (transaction) {
+        console.log('getAllPlaylists', transaction);
+        if (transaction instanceof IDBTransaction)
+            IDB.getInit(transaction, 'playlist');
+        else
+            IDB.getAll('playlist');
+    };
+
+    var postInitDb = function (event, data) {
+        var dbname = data[0],
+            transaction = data[1];
+        console.log('postInit', dbname, transaction);
+        if (dbname !== dbParams.name)
+            return;
+
+        getAllPlaylists(transaction);
+    };
+
+    $rootScope.$on('failure', function () {
+        console.log('failed to open db')
+    });
+    $rootScope.$on('dbopenupgrade', postInitDb);
+    $rootScope.$on('dbopen', postInitDb);
+
+    $rootScope.$on('getinit', dbupdate);
+    $rootScope.$on('getall', dbupdate);
+
 
     $rootScope.$on(Constants.INIT_PODS, init);
     $rootScope.$on(Constants.NEXT_POD, nextPod);
