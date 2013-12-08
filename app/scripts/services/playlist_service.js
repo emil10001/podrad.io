@@ -3,7 +3,9 @@
  */
 'use strict';
 
-myService.service('PlayListService', function ($rootScope, Constants, IDB) {
+myService.service('PlayListService', function ($rootScope, Constants, IDB, LocalWrapper) {
+    var CUR_PLAYING_AUDIO = "curPlayingAudio";
+
     this.playlist = {};
     this.playlist.curPlaying = {};
     this.playlist.playlist = [];
@@ -41,8 +43,10 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB) {
         this.playlist.playlist = this.playlist.playlist.filter(function (val) {
             return val["audio"] !== item.audio;
         });
-        if (!!localStorage["curPlayingAudio"] === item.audio)
-            localStorage[item.audio] = "";
+        if (!!this.playlist.curPlaying && this.playlist.curPlaying.audio === item.audio)
+            LocalWrapper.remove(CUR_PLAYING_AUDIO);
+
+        LocalWrapper.remove(item.audio);
 
         console.log('remove', this.playlist.playlist);
     };
@@ -66,23 +70,25 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB) {
         if (this.playlist.curPlaying.audio === item.audio)
             return;
 
-        if (!!localStorage[item.audio])
-            item.progress = localStorage[item.audio];
-        else
-            item.progress = 0;
+        var callback = function (nItem) {
+            console.log('updateCurPlaying callback',nItem);
+            if (!!nItem)
+                item.progress = nItem;
+            else
+                item.progress = 0;
 
-        this.playlist.curPlaying = item;
+            this.playlist.curPlaying = item;
 
-        // keep track of current audio track and progress
-        localStorage["curPlayingAudio"] = item.audio;
-        localStorage[item.audio] = item.progress;
+            // keep track of current audio track and progress
+            LocalWrapper.set(CUR_PLAYING_AUDIO, item.audio);
+            LocalWrapper.set(item.audio, item.progress);
+        };
+        LocalWrapper.get(item.audio, callback);
     };
 
     this.updateProgress = function (progress) {
         this.playlist.curPlaying.progress = progress;
-
-        // keep track of progress
-        localStorage[this.playlist.curPlaying.audio] = progress;
+        LocalWrapper.set(this.playlist.curPlaying.audio, progress);
     };
 
     var init = function () {
@@ -92,21 +98,24 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB) {
             return;
         }
 
-        var audio = localStorage["curPlayingAudio"];
-        var progress = localStorage[audio];
+        var callback = function(audio){
+            var callback2 = function(progress){
+                self.playlist.curPlaying = self.playlist.playlist.filter(function (val) {
+                    return val["audio"] === audio;
+                })[0];
+                if (!self.playlist.curPlaying) {
+                    self.playlist.curPlaying = {};
+                    console.log('self.playlist.curPlaying');
+                } else {
+                    self.playlist.curPlaying.progress = progress;
+                    console.log('init', self.playlist.curPlaying);
+                }
 
-        self.playlist.curPlaying = self.playlist.playlist.filter(function (val) {
-            return val["audio"] === audio;
-        })[0];
-        if (!self.playlist.curPlaying) {
-            self.playlist.curPlaying = {};
-            console.log('self.playlist.curPlaying');
-        } else {
-            self.playlist.curPlaying.progress = progress;
-            console.log('init', self.playlist.curPlaying);
+                $rootScope.$broadcast(Constants.INITTED);
+            }
+            LocalWrapper.get(audio, callback2);
         }
-
-        $rootScope.$broadcast(Constants.INITTED);
+        LocalWrapper.get(CUR_PLAYING_AUDIO, callback);
     };
 
     var nextPod = function () {
@@ -118,23 +127,25 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB) {
         if (!nextAudio)
             return;
 
-        localStorage["curPlayingAudio"] = nextAudio;
+        LocalWrapper.set(CUR_PLAYING_AUDIO, nextAudio);
 
-        var audio = localStorage["curPlayingAudio"];
-        var progress = localStorage[audio];
+        var audio = nextAudio;
 
-        self.playlist.curPlaying = self.playlist.playlist.filter(function (val) {
-            return val["audio"] === audio;
-        })[0];
-        if (!self.playlist.curPlaying) {
-            self.playlist.curPlaying = {};
-            $rootScope.$broadcast(Constants.INITTED);
-            return;
+        var callback2 = function(progress){
+            self.playlist.curPlaying = self.playlist.playlist.filter(function (val) {
+                return val["audio"] === audio;
+            })[0];
+            if (!self.playlist.curPlaying) {
+                self.playlist.curPlaying = {};
+                $rootScope.$broadcast(Constants.INITTED);
+                return;
+            }
+            self.playlist.curPlaying.progress = progress;
+            console.log('init', self.playlist.curPlaying);
+
+            $rootScope.$broadcast(Constants.INIT_PLAY);
         }
-        self.playlist.curPlaying.progress = progress;
-        console.log('init', self.playlist.curPlaying);
-
-        $rootScope.$broadcast(Constants.INIT_PLAY);
+        LocalWrapper.get(audio, callback2);
     }
 
     this.update = function (data) {

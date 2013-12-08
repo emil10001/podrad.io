@@ -8,6 +8,8 @@
         }
     },
     "permissions": [
+        "https://www.google-analytics.com/",
+        "http://ajax.googleapis.com/",
         "https://*.com/",
         "http://*.com/",
         "storage"
