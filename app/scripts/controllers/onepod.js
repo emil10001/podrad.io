@@ -8,7 +8,7 @@ myApp.config(['$httpProvider', function($httpProvider) {
 }
 ]);
 
-myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http) {
+myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http, PlayListService) {
     $scope.podId = $routeParams.podId;
     $scope.oneAtATime = true;
 
@@ -39,4 +39,15 @@ myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http) {
         });
     };
     $scope.makeRequest();
+
+    $scope.addItem = function(item){
+        item.image = $scope.podcontents.image._href;
+        item.name = $scope.podcontents.title;
+        item.url = $scope.podcontents.link;
+        item.audio = item.enclosure._url ;
+        item.type = item.enclosure._type;
+        PlayListService.addItem(item);
+    }
+
+
 });

@@ -1,31 +1,33 @@
-<div class="row">
-    <div class="span3">
-        <img ng-src="{{ podcontents.image._href }}" width='200px'/>
+<div ng-switch="podId != null">
+    <div class="row">
+        <div class="span3">
+            <img ng-src="{{ podcontents.image._href }}" width='200px'/>
+        </div>
+        <div class="span5">
+            <h2><a ng-href="{{ podcontents.podcastUrl }}">{{ podcontents.title }}</a></h2>
+            {{ podcontents.description }}
+        </div>
+        <div class="span3">
+            <form ng-submit="makeRequest()">
+                Show last
+                <input type="text" class="input-mini" ng-model="myPod.numResults">
+                <button class="btn-primary" type="submit"><i class="icon-refresh icon-white"></i></button>
+            </form>
+        </div>
     </div>
-    <div class="span5">
-        <h2><a ng-href="{{ podcontents.podcastUrl }}">{{ podcontents.title }}</a></h2>
-        {{ podcontents.description }}
-    </div>
-    <div class="span3">
-        <form ng-submit="makeRequest()">
-            Show last
-            <input type="text" class="input-mini" ng-model="myPod.numResults">
-            <button class="btn-primary" type="submit"><i class="icon-refresh icon-white"></i></button>
-        </form>
-    </div>
-</div>
 
-<br>
+    <br>
 
-<accordion>
-    <accordion-group ng-repeat="item in podcontents.item | limitTo:10 " close-others="oneAtATime">
-        <accordion-heading>
+    <accordion>
+        <accordion-group ng-repeat="item in podcontents.item | limitTo:10 " close-others="oneAtATime">
             <a class="btn btn-mini" ng-click="addItem(item)">
                 <i class="icon-plus icon-white"></i>
                 Add to playlist</a>
-            {{ item.title }}
-        </accordion-heading>
+            <accordion-heading>
+                {{ item.title }}
+            </accordion-heading>
 
-        <div ng-bind-html=' item.description '></div>
-    </accordion-group>
-</accordion>
+            <div ng-bind-html=' item.description '></div>
+        </accordion-group>
+    </accordion>
+</div>

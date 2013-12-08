@@ -1,6 +1,17 @@
 'use strict';
 
+var myUtils = angular.module('podRadio.utils', [
+    'ngResource'
+]);
+
+var myService = angular.module('podRadio.services', [
+    'ngResource',
+    'podRadio.utils'
+]);
+
 var myApp = angular.module('podRadio', [
+    'podRadio.services',
+    'podRadio.utils',
     'ngCookies',
     'ngResource',
     'ngSanitize',
@@ -9,7 +20,9 @@ var myApp = angular.module('podRadio', [
     'ui.router'
 ]);
 
-myApp.config(function ($routeProvider) {
+myApp.config(function ($routeProvider, $sceProvider) {
+    $sceProvider.enabled(false);
+
     $routeProvider
         .when('/', {
             templateUrl: 'views/main.html',
@@ -22,31 +35,5 @@ myApp.config(function ($routeProvider) {
         .otherwise({
             redirectTo: '/'
         });
+
 });
-
-
-//myApp.config(function ($stateProvider, $urlRouterProvider) {
-//    $urlRouterProvider.otherwise("/")
-//    $stateProvider
-//        .state('home', {
-//            abstract: true,
-//            url: "/",
-//            templateUrl: "views/main.html",
-//            controller: 'MainCtrl'
-//        })
-//        .state('home.playlist', {
-//            url: "",
-//            templateUrl: "views/playlist.html",
-//            controller: 'PlaylistCtrl'
-//        })
-//        .state('home.pods', {
-//            url: "",
-//            templateUrl: "views/pods.html",
-//            controller: 'PodsCtrl'
-//        })
-//        .state('home.onepod', {
-//            url: "",
-//            templateUrl: "views/onepod.html",
-//            controller: 'OnePodCtrl'
-//        });
-//});
