@@ -6,6 +6,8 @@
 myService.service('PlayListService', function ($rootScope, Constants, IDB, LocalWrapper) {
     var CUR_PLAYING_AUDIO = "curPlayingAudio";
 
+    var GET = 'playlist_srv_get';
+
     this.playlist = {};
     this.playlist.curPlaying = {};
     this.playlist.playlist = [];
@@ -66,28 +68,25 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB, Local
         IDB.put("playlist", myItem);
     };
 
+
     this.updateCurPlaying = function (item) {
         if (this.playlist.curPlaying.audio === item.audio)
             return;
 
-        var callback = function (nItem) {
-            console.log('updateCurPlaying callback',nItem);
-            if (!!nItem)
-                item.progress = nItem;
-            else
-                item.progress = 0;
+        this.playlist.curPlaying = item;
 
-            this.playlist.curPlaying = item;
+        // keep track of current audio track and progress
+        LocalWrapper.set(CUR_PLAYING_AUDIO, item.audio);
 
-            // keep track of current audio track and progress
-            LocalWrapper.set(CUR_PLAYING_AUDIO, item.audio);
-            LocalWrapper.set(item.audio, item.progress);
-        };
-        LocalWrapper.get(item.audio, callback);
+        LocalWrapper.get(item.audio, GET + "audio");
     };
 
     this.updateProgress = function (progress) {
-        this.playlist.curPlaying.progress = progress;
+        if (!!progress)
+            self.playlist.curPlaying.progress = progress;
+        else
+            self.playlist.curPlaying.progress = 0;
+
         LocalWrapper.set(this.playlist.curPlaying.audio, progress);
     };
 
@@ -98,25 +97,32 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB, Local
             return;
         }
 
-        var callback = function(audio){
-            var callback2 = function(progress){
-                self.playlist.curPlaying = self.playlist.playlist.filter(function (val) {
-                    return val["audio"] === audio;
-                })[0];
-                if (!self.playlist.curPlaying) {
-                    self.playlist.curPlaying = {};
-                    console.log('self.playlist.curPlaying');
-                } else {
-                    self.playlist.curPlaying.progress = progress;
-                    console.log('init', self.playlist.curPlaying);
-                }
-
-                $rootScope.$broadcast(Constants.INITTED);
-            }
-            LocalWrapper.get(audio, callback2);
-        }
-        LocalWrapper.get(CUR_PLAYING_AUDIO, callback);
+        LocalWrapper.get(CUR_PLAYING_AUDIO, GET + "audio_init");
     };
+
+    var audioInit = function (audio) {
+        self.playlist.curPlaying = self.playlist.playlist.filter(function (val) {
+            return val["audio"] === audio;
+        })[0];
+        if (!self.playlist.curPlaying) {
+            self.playlist.curPlaying = {};
+            console.log('self.playlist.curPlaying');
+        }
+
+        LocalWrapper.get(audio, GET + "progress_init");
+    }
+
+    var progressInit = function (progress) {
+        if (!!self.playlist.curPlaying) {
+            if (!!progress)
+                self.playlist.curPlaying.progress = progress;
+            else
+                self.playlist.curPlaying.progress = 0;
+            console.log('init', self.playlist.curPlaying);
+        }
+
+        $rootScope.$broadcast(Constants.INITTED);
+    }
 
     var nextPod = function () {
         if (self.playlist.playlist.length <= 0)
@@ -131,21 +137,26 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB, Local
 
         var audio = nextAudio;
 
-        var callback2 = function(progress){
-            self.playlist.curPlaying = self.playlist.playlist.filter(function (val) {
-                return val["audio"] === audio;
-            })[0];
-            if (!self.playlist.curPlaying) {
-                self.playlist.curPlaying = {};
-                $rootScope.$broadcast(Constants.INITTED);
-                return;
-            }
-            self.playlist.curPlaying.progress = progress;
-            console.log('init', self.playlist.curPlaying);
-
-            $rootScope.$broadcast(Constants.INIT_PLAY);
+        self.playlist.curPlaying = self.playlist.playlist.filter(function (val) {
+            return val["audio"] === audio;
+        })[0];
+        if (!self.playlist.curPlaying) {
+            self.playlist.curPlaying = {};
+            $rootScope.$broadcast(Constants.INITTED);
+            return;
         }
-        LocalWrapper.get(audio, callback2);
+
+        LocalWrapper.get(audio, GET + "progress_init_play");
+    }
+
+    var progressInitPlay = function (progress) {
+        if (!!progress)
+            self.playlist.curPlaying.progress = progress;
+        else
+            self.playlist.curPlaying.progress = 0;
+        console.log('init', self.playlist.curPlaying);
+
+        $rootScope.$broadcast(Constants.INIT_PLAY);
     }
 
     this.update = function (data) {
@@ -207,5 +218,10 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB, Local
 
     $rootScope.$on(Constants.INIT_PODS, init);
     $rootScope.$on(Constants.NEXT_POD, nextPod);
+
+    $rootScope.$on(GET + "audio", this.updateProgress);
+    $rootScope.$on(GET + "progress_init", progressInit);
+    $rootScope.$on(GET + "audio_init", audioInit);
+    $rootScope.$on(GET + "progress_init_play", progressInitPlay);
 
 });

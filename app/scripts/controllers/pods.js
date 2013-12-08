@@ -1,6 +1,7 @@
 'use strict';
 
 myApp.controller('PodsCtrl', function ($scope, LocalWrapper) {
+    var GET = 'pods_get';
 
     var defaultPodIds = [
         CryptoJS.MD5('http://www.npr.org/rss/podcast.php?id=510289').toString(CryptoJS.enc.Hex),
@@ -34,29 +35,32 @@ myApp.controller('PodsCtrl', function ($scope, LocalWrapper) {
         }
     }
 
-    function updatePods() {
-        var getPodIds = function (podIds) {
-            console.log('updatePods ' + podIds);
-            if (!!!podIds) {
-                useDefaults();
-                return;
-            }
-            $scope.podIds = JSON.parse(podIds);
-            if ($scope.podIds.length < 1) {
-                useDefaults();
-                return;
-            }
-            $scope.myPods = [];
-            for (var i = 0; i < $scope.podIds.length; i++) {
-                var getEachPod = function (localPod) {
-                    if (!!localPod)
-                        $scope.myPods.push(JSON.parse(localPod));
-                }
-                LocalWrapper.get($scope.podIds[i], getEachPod);
-            }
+    var getPodIds = function (podIds) {
+        console.log('updatePods', podIds);
+        if (!!!podIds) {
+            useDefaults();
+            return;
         }
-        LocalWrapper.get("podIds", getPodIds);
+        $scope.podIds = JSON.parse(podIds);
+        if ($scope.podIds.length < 1) {
+            useDefaults();
+            return;
+        }
+        $scope.myPods = [];
+        for (var i = 0; i < $scope.podIds.length; i++) {
+            LocalWrapper.get($scope.podIds[i], GET+"each");
+        }
     }
+
+    var getEachPod = function (localPod) {
+        if (!!localPod)
+            $scope.myPods.push(JSON.parse(localPod));
+    }
+
+    function updatePods() {
+        LocalWrapper.get("podIds", GET+"podIds");
+    }
+
 
     updatePods();
     $scope.newpod = {'name': '', 'url': ''};
@@ -72,7 +76,7 @@ myApp.controller('PodsCtrl', function ($scope, LocalWrapper) {
     $scope.addPod = function () {
         console.log('adding podcast ' + $scope.newpod.name + ':' + $scope.newpod.url);
         var id = CryptoJS.MD5($scope.newpod.url).toString(CryptoJS.enc.Hex);
-        LocalWrapper.set(id, JSON.stringify({'id': id, 'name': $scope.newpod.name, 'url': $scope.newpod.url }));
+        LocalWrapper.set(id, JSON.stringify({'id': id, 'name': $scope.newpod.name, 'url': $scope.newpod.url }), SET);
         $scope.podIds.push(id);
         for (var i = 0; i < $scope.podIds.length; i++) {
             if (!!!$scope.podIds[i]) {
@@ -87,4 +91,8 @@ myApp.controller('PodsCtrl', function ($scope, LocalWrapper) {
         $scope.newpod.url = '';
         updatePods();
     };
+
+    $scope.$on(GET+"podIds", getPodIds);
+    $scope.$on(GET+"each",getEachPod);
+
 });

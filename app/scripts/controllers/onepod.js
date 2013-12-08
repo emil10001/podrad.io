@@ -9,9 +9,10 @@ myApp.config(['$httpProvider', function ($httpProvider) {
 ]);
 
 myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http, PlayListService, LocalWrapper) {
+    var GET = 'onepod_get';
+
     $scope.podId = $routeParams.podId;
     $scope.oneAtATime = true;
-
 
     delete $http.defaults.headers.common['X-Requested-With'];
     $http.defaults.useXDomain = true;
@@ -34,15 +35,6 @@ myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http, PlayListSe
             });
     };
 
-    var initPod = function (data) {
-        $scope.myPod = JSON.parse(data);
-        $scope.myPod.numResults = 5;
-        console.log($scope.myPod);
-        console.log('url ' + $scope.myPod.url);
-        $scope.makeRequest();
-    }
-    LocalWrapper.get($scope.podId);
-
     $scope.addItem = function (item) {
         item.image = $scope.podcontents.image._href;
         item.name = $scope.podcontents.title;
@@ -52,5 +44,14 @@ myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http, PlayListSe
         PlayListService.addItem(item);
     }
 
+    var initPod = function (data) {
+        $scope.myPod = JSON.parse(data);
+        $scope.myPod.numResults = 5;
+        console.log($scope.myPod);
+        console.log('url ' + $scope.myPod.url);
+        $scope.makeRequest();
+    }
+    LocalWrapper.get($scope.podId, GET);
+    $scope.$on(GET, initPod);
 
 });
