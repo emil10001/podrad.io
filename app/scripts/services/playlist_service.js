@@ -128,6 +128,7 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB) {
         })[0];
         if (!self.playlist.curPlaying) {
             self.playlist.curPlaying = {};
+            $rootScope.$broadcast(Constants.INITTED);
             return;
         }
         self.playlist.curPlaying.progress = progress;
