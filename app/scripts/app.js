@@ -13,6 +13,7 @@ var myService = angular.module('podRadio.services', [
 
 var myApp = angular.module('podRadio', [
     'angular-chrome-localstorage',
+    'angular-indexeddb',
     'podRadio.services',
     'podRadio.utils',
     'ngCookies',
@@ -23,8 +24,32 @@ var myApp = angular.module('podRadio', [
     'ui.router'
 ]);
 
+var dbParams = {
+    name: 'podradio',
+    version: 2,
+    options: [
+        {
+            storeName: 'playlist',
+            keyPath: 'created_at',
+            indexes: [
+                { name: 'audio', unique: true },
+                { name: 'url', unique: false }
+            ]
+        },
+        {
+            storeName: 'pods',
+            keyPath: 'id',
+            indexes: [
+                { name: 'name', unique: false },
+                { name: 'url', unique: true }
+            ]
+        }
+    ]
+};
+
 myApp.config(function ($routeProvider, $sceProvider) {
     $sceProvider.enabled(false);
+
 
     $routeProvider
         .when('/', {
@@ -40,3 +65,7 @@ myApp.config(function ($routeProvider, $sceProvider) {
         });
 
 });
+
+myApp.run(['IDB', function(IDB){
+    IDB.openDB(dbParams.name, dbParams.version, dbParams.options);
+}]);

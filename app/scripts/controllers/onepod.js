@@ -8,9 +8,7 @@ myApp.config(['$httpProvider', function ($httpProvider) {
 }
 ]);
 
-myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http, PlayListService, LocalWrapper) {
-    var GET = 'onepod_get';
-
+myApp.controller('OnePodCtrl', function ($scope, $rootScope, $routeParams, $http, PlayListService, SubscriptionService) {
     $scope.podId = $routeParams.podId;
     $scope.oneAtATime = true;
 
@@ -18,6 +16,11 @@ myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http, PlayListSe
     $http.defaults.useXDomain = true;
 
     $scope.makeRequest = function () {
+        if (!$scope.myPod){
+            console.log('myPod not initted');
+            return;
+        }
+
         console.log('numResults ' + $scope.myPod.numResults);
         var requestUrl = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&output=xml&callback=JSON_CALLBACK&num=' + $scope.myPod.numResults + '&q=' + encodeURIComponent($scope.myPod.url);
 
@@ -44,14 +47,18 @@ myApp.controller('OnePodCtrl', function ($scope, $routeParams, $http, PlayListSe
         PlayListService.addItem(item);
     }
 
-    var initPod = function (data) {
-        $scope.myPod = JSON.parse(data);
+    var initPod = function () {
+        console.log('initPod');
+        if (!$scope.podId)
+            return;
+
+        $scope.myPod = SubscriptionService.fullPods[$scope.podId];
         $scope.myPod.numResults = 5;
-        console.log($scope.myPod);
-        console.log('url ' + $scope.myPod.url);
+        console.log('myPod', $scope.myPod);
+        console.log('url', $scope.myPod.url);
         $scope.makeRequest();
     }
-    LocalWrapper.get($scope.podId, GET);
-    $scope.$on(GET, initPod);
+
+    $scope.$on("updatePods", initPod);
 
 });
