@@ -16,7 +16,7 @@ myApp.controller('OnePodCtrl', function ($scope, $rootScope, $routeParams, $http
     $http.defaults.useXDomain = true;
 
     $scope.makeRequest = function () {
-        if (!$scope.myPod){
+        if (!$scope.myPod) {
             console.log('myPod not initted');
             return;
         }
@@ -53,6 +53,9 @@ myApp.controller('OnePodCtrl', function ($scope, $rootScope, $routeParams, $http
             return;
 
         $scope.myPod = SubscriptionService.fullPods[$scope.podId];
+        if (!$scope.myPod)
+            return;
+
         $scope.myPod.numResults = 5;
         console.log('myPod', $scope.myPod);
         console.log('url', $scope.myPod.url);
@@ -61,4 +64,8 @@ myApp.controller('OnePodCtrl', function ($scope, $rootScope, $routeParams, $http
 
     $scope.$on("updatePods", initPod);
 
+    (function () {
+        if (!$scope.podId)
+            $scope.myPod = SubscriptionService.fullPods[$scope.podId];
+    })();
 });

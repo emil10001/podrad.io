@@ -66,6 +66,6 @@ myApp.config(function ($routeProvider, $sceProvider) {
 
 });
 
-myApp.run(['IDB', function(IDB){
+myApp.run(['IDB', function (IDB) {
     IDB.openDB(dbParams.name, dbParams.version, dbParams.options);
 }]);

@@ -42,13 +42,21 @@ myService.service('SubscriptionService', function ($rootScope, Constants, IDB) {
     this.update = function (data) {
         $rootScope.$apply(function () {
             console.log('update, apply', data);
-            self.fullPods = data;
+            self.myPods = [];
+            self.podIds = [];
+            self.fullPods = {};
             for (var key in data) {
                 if (data.hasOwnProperty(key)) {
                     self.myPods.push(data[key]);
-                    self.podIds.push(key);
+                    if (data[key].hasOwnProperty('id')){
+                        self.podIds.push(data[key].id);
+                        self.fullPods[data[key].id] = data[key];
+                    }
                 }
             }
+            console.log('myPods',self.myPods);
+            console.log('podIds',self.podIds);
+            console.log('fullPods',self.fullPods);
             if (self.myPods.length <= 0)
                 IDB.batchInsert('pods', defaultPods);
             else

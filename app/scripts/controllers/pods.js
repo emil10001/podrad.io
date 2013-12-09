@@ -1,10 +1,14 @@
 'use strict';
 
-myApp.controller('PodsCtrl', function ($scope, $rootScope, SubscriptionService) {
-    $scope.myPods;
-    $scope.podIds;
+myApp.controller('PodsCtrl', function ($scope, $rootScope, $location, SubscriptionService) {
+    $scope.myPods = SubscriptionService.myPods;
+    $scope.podIds = SubscriptionService.podIds;
 
     $scope.newpod = {'name': '', 'url': ''};
+
+    $scope.getPodUrl = function(id){
+        $location.path('/'+ id);
+    };
 
     $scope.deletePod = function (toDelete) {
         if (confirm('really delete ' + toDelete.name + '?')) {
