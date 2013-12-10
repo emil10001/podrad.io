@@ -1,13 +1,13 @@
 'use strict';
 
-myApp.controller('PodsCtrl', function ($scope, $rootScope, $location, SubscriptionService) {
+myApp.controller('PodsCtrl', function ($scope, $rootScope, SubscriptionService) {
     $scope.myPods = SubscriptionService.myPods;
     $scope.podIds = SubscriptionService.podIds;
 
     $scope.newpod = {'name': '', 'url': ''};
 
-    $scope.getPodUrl = function(id){
-        $location.path('/'+ id);
+    $scope.podClicked = function(id){
+        $rootScope.$broadcast("change_channels",id);
     };
 
     $scope.deletePod = function (toDelete) {

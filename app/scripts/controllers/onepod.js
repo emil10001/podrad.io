@@ -49,8 +49,13 @@ myApp.controller('OnePodCtrl', function ($scope, $rootScope, $routeParams, $http
 
     var initPod = function () {
         console.log('initPod');
-        if (!$scope.podId)
+        if (!$scope.podId){
+            $scope.myPod = SubscriptionService.myPods[0];
+            $scope.podId = $scope.myPod.id;
+        }
+        if (!$scope.podId){
             return;
+        }
 
         $scope.myPod = SubscriptionService.fullPods[$scope.podId];
         if (!$scope.myPod)
@@ -62,7 +67,17 @@ myApp.controller('OnePodCtrl', function ($scope, $rootScope, $routeParams, $http
         $scope.makeRequest();
     }
 
+    var changeChannels = function (event, data) {
+        console.log('changeChannels', data);
+        if (!data)
+            return;
+
+        $scope.podId = data;
+        initPod();
+    }
+
     $scope.$on("updatePods", initPod);
+    $scope.$on("change_channels", changeChannels);
 
     (function () {
         if (!$scope.podId)
