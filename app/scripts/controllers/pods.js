@@ -6,12 +6,14 @@ myApp.controller('PodsCtrl', function ($scope, $rootScope, SubscriptionService) 
 
     $scope.newpod = {'name': '', 'url': ''};
 
-    $scope.podClicked = function(id){
-        $rootScope.$broadcast("change_channels",id);
+    $scope.podClicked = function (id) {
+        $rootScope.$broadcast("change_channels", id);
     };
 
     $scope.deletePod = function (toDelete) {
-        if (confirm('really delete ' + toDelete.name + '?')) {
+        if (!!chrome.storage) {
+            SubscriptionService.deletePod(toDelete);
+        } else if (confirm('really delete ' + toDelete.name + '?')) {
             SubscriptionService.deletePod(toDelete);
         }
     };
@@ -25,7 +27,7 @@ myApp.controller('PodsCtrl', function ($scope, $rootScope, SubscriptionService) 
         $scope.newpod.url = '';
     };
 
-    var updatePods = function(){
+    var updatePods = function () {
         $scope.myPods = SubscriptionService.myPods;
         $scope.podIds = SubscriptionService.podIds;
     };

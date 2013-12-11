@@ -1,0 +1,13 @@
+{
+  "name": "x2js",
+  "homepage": "https://github.com/abdmob/x2js",
+  "_release": "8080312591",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "80803125912a9f4470fbf1c7e4f3bbbcaea6e545"
+  },
+  "_source": "git://github.com/abdmob/x2js.git",
+  "_target": "*",
+  "_originalSource": "abdmob/x2js"
+}

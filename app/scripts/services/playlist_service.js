@@ -49,6 +49,8 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB, Local
         myItem.audio = item.audio;
         myItem.type = item.type;
 
+        console.log('addItem', myItem);
+
         this.playlist.playlist.push(myItem);
         IDB.put("playlist", myItem);
     };
@@ -156,7 +158,7 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB, Local
 
     this.update = function (data) {
         $rootScope.$apply(function () {
-            console.log('update, apply');
+            console.log('update, apply', data);
             self.playlist.playlist = data;
             init();
         });
@@ -200,6 +202,13 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB, Local
 
         getAllPlaylists(transaction);
     };
+
+    (function () {
+        if (!IDB.db)
+            return;
+        getAllPlaylists();
+    })();
+
 
     $rootScope.$on('failure', function () {
         console.log('failed to open db')

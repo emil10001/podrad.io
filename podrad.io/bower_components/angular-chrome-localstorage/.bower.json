@@ -1,0 +1,17 @@
+{
+  "name": "angular-chrome-localstorage",
+  "main": "localwrapper.js",
+  "dependencies": {
+    "angular": ">=1.2.0"
+  },
+  "homepage": "https://github.com/emil10001/angular-chrome-localstorage",
+  "_release": "818ab45a43",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "818ab45a4351200698d33bfa7b212f487f67da43"
+  },
+  "_source": "git://github.com/emil10001/angular-chrome-localstorage.git",
+  "_target": "*",
+  "_originalSource": "emil10001/angular-chrome-localstorage"
+}

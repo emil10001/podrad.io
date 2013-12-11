@@ -35,7 +35,7 @@ myService.service('SubscriptionService', function ($rootScope, Constants, IDB) {
     };
 
     this.addPod = function (newPod) {
-        console.log('adding podcast ' + newpod.name + ':' + newpod.url);
+        console.log('adding podcast ' + newPod.name + ':' + newPod.url);
         IDB.put("pods", newPod);
     };
 
@@ -48,15 +48,15 @@ myService.service('SubscriptionService', function ($rootScope, Constants, IDB) {
             for (var key in data) {
                 if (data.hasOwnProperty(key)) {
                     self.myPods.push(data[key]);
-                    if (data[key].hasOwnProperty('id')){
+                    if (data[key].hasOwnProperty('id')) {
                         self.podIds.push(data[key].id);
                         self.fullPods[data[key].id] = data[key];
                     }
                 }
             }
-            console.log('myPods',self.myPods);
-            console.log('podIds',self.podIds);
-            console.log('fullPods',self.fullPods);
+            console.log('myPods', self.myPods);
+            console.log('podIds', self.podIds);
+            console.log('fullPods', self.fullPods);
             if (self.myPods.length <= 0)
                 IDB.batchInsert('pods', defaultPods);
             else
@@ -102,6 +102,12 @@ myService.service('SubscriptionService', function ($rootScope, Constants, IDB) {
 
         getAllPods(transaction);
     };
+
+    (function () {
+        if (!IDB.db)
+            return;
+        getAllPods();
+    })();
 
     $rootScope.$on('failure', function () {
         console.log('failed to open db')

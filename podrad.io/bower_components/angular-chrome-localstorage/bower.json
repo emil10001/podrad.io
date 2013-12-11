@@ -1,0 +1,8 @@
+{
+    "name": "angular-chrome-localstorage",
+    "version": "0.0.1",
+    "main": "localwrapper.js",
+    "dependencies": {
+        "angular": ">=1.2.0"
+    }
+}
