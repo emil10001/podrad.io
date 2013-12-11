@@ -19,18 +19,22 @@ myApp.controller('OnePodCtrl', function ($scope, $rootScope, $routeParams, $http
         if (!$scope.podcontents.image)
             return;
 
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', $scope.podcontents.image, true);
-        xhr.setRequestHeader("Content-Type", "application/octet-stream");
-        xhr.responseType = 'blob';
-        xhr.onload = function (e) {
-                console.log('error?', e);
-                var onePodImg = document.getElementById("onepod_img");
-                if (!!onePodImg)
-                    onePodImg.src = window.webkitURL.createObjectURL(this.response)
-        };
+        console.log('loadImg', $scope.podcontents.image._href);
 
-        xhr.send();
+        var xhrImg = new XMLHttpRequest();
+        xhrImg.open('GET', $scope.podcontents.image._href, true);
+        xhrImg.responseType = 'blob';
+        xhrImg.onload = function (e) {
+            console.log('error?', e);
+            var onePodImg = document.getElementById("onepod_img");
+            if (!!onePodImg)
+                onePodImg.src = window.webkitURL.createObjectURL(this.response)
+        };
+        var onePodImg = document.getElementById("onepod_img");
+        if (!!onePodImg)
+            onePodImg.src = '';
+
+        xhrImg.send();
     };
 
 
@@ -57,7 +61,7 @@ myApp.controller('OnePodCtrl', function ($scope, $rootScope, $routeParams, $http
                     $scope.podcontents.podcastUrl = $scope.podcontents.link;
                 }
                 console.log('makeRequest', $scope.podcontents);
-                loadImg();
+                $scope.$broadcast('onepod_loaded');
             };
 
             xhr.send();
@@ -133,6 +137,8 @@ myApp.controller('OnePodCtrl', function ($scope, $rootScope, $routeParams, $http
         $scope.podId = data;
         initPod();
     }
+
+    $scope.$on("onepod_loaded", loadImg);
 
     $scope.$on("updatePods", initPod);
     $scope.$on("change_channels", changeChannels);
