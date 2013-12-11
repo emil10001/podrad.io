@@ -1,8 +1,0 @@
-{
-    "name": "angular-indexeddb",
-    "version": "0.0.1",
-    "main": "IDB.js",
-    "dependencies": {
-        "angular": ">=1.2.0"
-    }
-}
