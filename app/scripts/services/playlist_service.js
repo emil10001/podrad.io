@@ -36,6 +36,7 @@ myService.service('PlayListService', function ($rootScope, Constants, IDB, Local
         LocalWrapper.remove(item.audio);
 
         console.log('remove', this.playlist.playlist);
+        $rootScope.$broadcast(Constants.INITTED);
     };
 
     this.addItem = function (item) {

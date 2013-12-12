@@ -15,7 +15,7 @@
         "storage"
     ],
     "icons": {
-        "16": "favicon.ico",
-        "128": "favicon.ico"
+        "16": "images/icon_small.png",
+        "128": "images/icon.png"
     }
 }

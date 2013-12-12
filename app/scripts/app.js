@@ -24,6 +24,9 @@ var myApp = angular.module('podRadio', [
     'ui.router'
 ]);
 
+var X2JS = new X2JS();
+var analytics = analytics || null;
+
 var dbParams = {
     name: 'podradio',
     version: 2,
@@ -47,9 +50,9 @@ var dbParams = {
     ]
 };
 
-myApp.config(function ($routeProvider, $sceProvider) {
+myApp.config(function ($routeProvider, $sceProvider, $httpProvider) {
     $sceProvider.enabled(false);
-
+    $httpProvider.defaults.useXDomain = true;
 
     $routeProvider
         .when('/', {
