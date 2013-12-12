@@ -1,0 +1,21 @@
+{
+    "name": "PodRad.io",
+    "description": "A radio for your Chrome",
+    "version": "0.1",
+    "app": {
+        "background": {
+            "scripts": ["scripts/background.js"]
+        }
+    },
+    "permissions": [
+        "https://www.google-analytics.com/",
+        "http://ajax.googleapis.com/",
+        "https://*.com/",
+        "http://*.com/",
+        "storage"
+    ],
+    "icons": {
+        "16": "images/icon_small.png",
+        "128": "images/icon.png"
+    }
+}

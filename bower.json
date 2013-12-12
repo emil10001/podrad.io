@@ -5,6 +5,7 @@
         "jquery": "~1.10.0",
         "json3": "~3.2.4",
         "angular-indexeddb": "emil10001/angular-indexeddb",
+        "angular-chrome-localstorage": "emil10001/angular-chrome-localstorage",
         "x2js": "abdmob/x2js",
         "es5-shim": "~2.0.8",
         "angular": "~1.2.0",

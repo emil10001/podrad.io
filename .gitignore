@@ -4,6 +4,8 @@ logs/*
 .sass-cache/*
 dist/*
 *.swp
+*.tar.gz
+*.tar.bz2
 *.iml
 !0.gitkeep
 node_modules/
